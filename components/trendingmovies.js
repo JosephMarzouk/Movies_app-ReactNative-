@@ -7,7 +7,7 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 
-export default function TrendingMovies( {data} ) {
+export default function rendingMovies( {data} ) {
   const navigation = useNavigation();
   const handleClick = (item) => {
     console.log("Navigate to movie:", item.title);

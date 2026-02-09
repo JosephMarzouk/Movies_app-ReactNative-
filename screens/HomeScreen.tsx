@@ -7,12 +7,12 @@ import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 
 export default function HomeScreen() {
     const [trendingMovies, setTrendingMovies] = useState([
-        { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png") },
-        { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png") },
+        { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
+        { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
     ]);
     const [Movieslist, setMovieslist] = useState([
-        { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png") },
-        { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png") },
+        { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
+        { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
     ]);
     return (
         <View style={styles.View}>

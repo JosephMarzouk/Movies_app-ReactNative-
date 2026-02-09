@@ -1,16 +1,40 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
+import CastList from "../components/castlist";
+
 import { ChevronLeftIcon, HeartIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
 
 type RootStackParamList = {
-  MovieDetails: { item: { id: number; title: string; poster_path: any; overview?: string } };
+  MovieDetails: {
+    item: {
+      id: number;
+      title: string;
+      poster_path: any;
+      overview?: string;
+
+    };
+  };
 };
 
-type MovieDetailsRouteProp = RouteProp<RootStackParamList, 'MovieDetails'>;
+type MovieDetailsRouteProp = RouteProp<RootStackParamList, "MovieDetails">;
+
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 
 export default function MovieDetails() {
+  const [cast, setCast] = useState([{ name: "name", profile_path: require("../assets/images/icon.png") }, { name: "name", profile_path: require("../assets/images/icon.png") }, { name: "name", profile_path: require("../assets/images/icon.png") }, { name: "name", profile_path: require("../assets/images/icon.png") }]);
   const navigation = useNavigation();
   const route = useRoute<MovieDetailsRouteProp>();
   const [isLiked, setIsLiked] = useState(false);
@@ -27,11 +51,25 @@ export default function MovieDetails() {
 
   return (
     <View style={styles.container}>
+      {/* Poster Background */}
       <Image source={item.poster_path} style={styles.backgroundPoster} />
+
+      {/* Fade Gradient */}
+      <LinearGradient
+        colors={["transparent", "rgba(0,0,0,0.7)", "black"]}
+        style={styles.gradient}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+      />
+
+      {/* Header */}
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}> <ChevronLeftIcon size={24} color="white" /></TouchableOpacity>
-          <TouchableOpacity onPress={()=>{setIsLiked(!isLiked)}}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+            <ChevronLeftIcon size={24} color="white" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
             {isLiked ? (
               <HeartSolidIcon size={24} color="red" />
             ) : (
@@ -40,12 +78,35 @@ export default function MovieDetails() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      <ScrollView style={styles.contentScroll}>
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.overview}>{item.overview || 'No overview available'}</Text>
+<ScrollView>
+      {/* Content */}
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>{item.title}</Text>
+
+        <View style={styles.metaRow}>
+          <Text style={styles.metaText}>Release Date:</Text>
+          <Text style={styles.metaText}> 2017 </Text>
+          <Text style={styles.metaText}>· 3hr 20min</Text>
         </View>
-      </ScrollView>
+
+
+        <View style={styles.metaRow}>
+
+          <Text style={styles.metaText}>Action · Comedy · Adventure</Text>
+        </View>
+
+        <Text style={styles.overview}>
+          {item.overview || "No overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview available"}
+        </Text>
+
+        {/* Cast List */}
+
+
+        <CastList cast={cast} />
+
+      </View>
+</ScrollView>
+
     </View>
   );
 }
@@ -55,58 +116,78 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
   },
+
   backgroundPoster: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
-    left: 0,
-    right: 0,
-    height: 400,
-    width: '100%',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    width: "100%",
+    height: height * 0.65,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
   },
+
+  gradient: {
+    position: "absolute",
+    width: "100%",
+    height: height * 0.65,
+  },
+
   safeArea: {
-    position: 'relative',
+    position: "absolute",
+    top: 0,
+    width: "100%",
     zIndex: 10,
   },
-  contentScroll: {
-    flex: 1,
-    marginTop: 350,
-    backgroundColor: '#000',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingTop: 20,
-  },
-  contentContainer: {
-    padding: 20,
-  },
-  backBtn: {
-    backgroundColor: 'rgba(234, 179, 8, 0.8)',
-    width: 33,
-    height: 33,
-    padding: 5,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 10
-  },
+
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    marginTop: 5,
+  },
+
+  backBtn: {
+    backgroundColor: "rgba(234,179,8,0.9)",
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  contentContainer: {
+    marginTop: height * 0.45,
     paddingHorizontal: 20,
   },
+
   title: {
     color: "white",
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
   },
+
+  metaRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 6,
+  },
+
+  metaText: {
+    color: "#ccc",
+    fontSize: 14,
+  },
+
   overview: {
     color: "white",
+    fontFamily: "Poppins_400Regular",
     fontSize: 16,
     lineHeight: 24,
+    marginTop: 12,
+    textAlign: "center",
   },
+
   errorText: {
     color: "white",
     fontSize: 18,

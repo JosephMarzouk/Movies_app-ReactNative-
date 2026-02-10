@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import CastList from "../components/castlist";
 
-import { ChevronLeftIcon, HeartIcon } from "react-native-heroicons/outline";
+import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
 
 type RootStackParamList = {
@@ -73,7 +73,7 @@ export default function MovieDetails() {
             {isLiked ? (
               <HeartSolidIcon size={24} color="red" />
             ) : (
-              <HeartIcon size={24} color="white" />
+              <HeartSolidIcon size={24} color="white" />
             )}
           </TouchableOpacity>
         </View>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    marginTop: 5,
+    marginTop: height * 0.07,
   },
 
   backBtn: {

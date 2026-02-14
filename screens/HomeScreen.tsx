@@ -1,8 +1,8 @@
-import MoviesList from "@/components/movieslist";
 import TrendingMovies from "@/components/trendingmovies";
 import React, { useState } from "react";
 import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
+import MoviesList from "../components/movieslist";
 
 
 export default function HomeScreen() {
@@ -10,7 +10,7 @@ export default function HomeScreen() {
         { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
         { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
     ]);
-    const [Movieslist, setMovieslist] = useState([
+     const [movies, setMovies] = useState([
         { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
         { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
     ]);
@@ -40,7 +40,7 @@ export default function HomeScreen() {
                 </View>
 
                 <TrendingMovies data={trendingMovies} />
-                <MoviesList title="Popular Movies" data={Movieslist} />
+                <MoviesList title="Popular Movies" data={movies} />
             </SafeAreaView>
         </View>
 

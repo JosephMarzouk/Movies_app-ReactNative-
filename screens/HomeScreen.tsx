@@ -1,11 +1,22 @@
 import TrendingMovies from "@/components/trendingmovies";
-import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useState } from "react";
 import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
-import MoviesList from "../components/movieslist";
+
+type RootStackParamList = {
+  Home: undefined;
+  MovieDetails: { movieId: number };
+  ActorScreen: { actorId: number };
+  SearchScreen: undefined;
+};
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 
 export default function HomeScreen() {
+    const navigation = useNavigation<HomeScreenNavigationProp>();     
     const [trendingMovies, setTrendingMovies] = useState([
         { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
         { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
@@ -14,7 +25,8 @@ export default function HomeScreen() {
         { id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
         { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"),cast:[{name:"name",profile_path:require("../assets/images/icon.png")}] },
     ]);
-    return (
+  
+        return (
         <View style={styles.View}>
             <StatusBar
                 barStyle="light-content"
@@ -34,18 +46,18 @@ export default function HomeScreen() {
                         <Text style={styles.Text}>ovies</Text>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('SearchScreen')}}>
                         <MagnifyingGlassIcon color="white" size={24} />
                     </TouchableOpacity>
                 </View>
 
                 <TrendingMovies data={trendingMovies} />
-                <MoviesList title="Popular Movies" data={movies} />
+                
             </SafeAreaView>
         </View>
 
 
-    )
+    )   
 }
 
 const styles = StyleSheet.create({

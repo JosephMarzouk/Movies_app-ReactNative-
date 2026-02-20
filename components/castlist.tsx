@@ -1,14 +1,20 @@
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RootStackParamList } from '../navigation/appnavigations';
+import { CastMember } from '../types/cast';
 
-export default function CastList ({cast}){
+interface CastListProps {
+  cast: CastMember[];
+}
+
+export default function CastList({ cast }: CastListProps){
     console.log('CastList rendered with cast:', cast);
     
-    const navigation = useNavigation();
-    const handleClick = (item) => {
-       
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const handleClick = (item: CastMember) => {
         navigation.navigate('ActorScreen', { actor: item });
-      };
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Top Cast</Text>
@@ -25,16 +31,16 @@ export default function CastList ({cast}){
     )
 }
 
-const CastIcon = (CastData , handleClick , index)=>{
-return(
-    <View style={styles.castItem} key={index}>
-    <TouchableOpacity onPress={()=>{handleClick(CastData)}}>
-    <Image source={CastData.profile_path} style={styles.castImage} />
-    <Text style={styles.castName}>{CastData.name}</Text>
-    </TouchableOpacity>
-    </View>
-)
-}
+const CastIcon = (CastData: CastMember, handleClick: (item: CastMember) => void, index: number) => {
+    return (
+        <View style={styles.castItem} key={index}>
+            <TouchableOpacity onPress={() => { handleClick(CastData); }}>
+                <Image source={CastData.profile_path} style={styles.castImage} />
+                <Text style={styles.castName}>{CastData.name}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
 const styles = StyleSheet.create({
     container: {
         marginTop: 16,

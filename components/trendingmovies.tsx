@@ -1,4 +1,6 @@
+import { RootStackParamList } from "@/navigation/appnavigations";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -7,12 +9,12 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 
-export default function rendingMovies( {data} ) {
-  const navigation = useNavigation();
-  const handleClick = (item) => {
+export default function TrendingMovies({ data }: { data: any[] }) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const handleClick = (item: any) => {
     console.log("Navigate to movie:", item.title);
-    navigation.navigate("MovieDetails", { item });
-  }
+    navigation.navigate("MovieDetails", { movieId: item.id });
+  };
   return (
     <View>
       <Text style={styles.text}>Trending Movies</Text>
@@ -34,7 +36,7 @@ export default function rendingMovies( {data} ) {
   );  
 }
 
-const MovieCard = ( {item , handleClick}) => {
+const MovieCard = ( {item , handleClick}: {item: any , handleClick: (item: any) => void}) => {
   return (
     <View style={[styles.cardWrapper, { width: width * 0.4  }]}>
       <TouchableOpacity onPress={() => handleClick(item)}>

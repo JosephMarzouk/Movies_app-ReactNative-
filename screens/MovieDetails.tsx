@@ -1,4 +1,5 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
@@ -12,34 +13,22 @@ import {
   View
 } from "react-native";
 import CastList from "../components/castlist";
+import { RootStackParamList } from "../navigation/appnavigations";
 
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
 
-type RootStackParamList = {
-  MovieDetails: {
-    item: {
-      id: number;
-      title: string;
-      poster_path: any;
-      overview?: string;
-
-    };
-  };
-};
-
-type MovieDetailsRouteProp = RouteProp<RootStackParamList, "MovieDetails">;
-
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+
 export default function MovieDetails() {
-  const [cast, setCast] = useState([{ name: "name", profile_path: require("../assets/images/icon.png") }, { name: "name", profile_path: require("../assets/images/icon.png") }, { name: "name", profile_path: require("../assets/images/icon.png") }, { name: "name", profile_path: require("../assets/images/icon.png") }]);
-  const navigation = useNavigation();
-  const route = useRoute<MovieDetailsRouteProp>();
+  const [cast, setCast] = useState([{ id: 1, name: "John Doe", profile_path: require("../assets/images/icon.png") }, { id: 2, name: "Jane Smith", profile_path: require("../assets/images/icon.png") }, { id: 3, name: "Bob Johnson", profile_path: require("../assets/images/icon.png") }, { id: 4, name: "Alice Brown", profile_path: require("../assets/images/icon.png") }]);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, "MovieDetails">>();
   const [isLiked, setIsLiked] = useState(false);
 
-  if (!route.params?.item) {
+  if (!route.params?.movieId) {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>Movie not found</Text>
@@ -47,7 +36,8 @@ export default function MovieDetails() {
     );
   }
 
-  const { item } = route.params;
+  const movieId = route.params.movieId;
+  const item = { id: movieId, title: `Movie ${movieId}`, poster_path: require("../assets/images/icon.png"), overview: "Sample movie overview..." };
 
   return (
     <View style={styles.container}>

@@ -1,18 +1,29 @@
 import MoviesList from "@/components/movieslist";
-import { useNavigation } from "expo-router";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
+import { RootStackParamList } from "../navigation/appnavigations";
+import { CastMember } from "../types/cast";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+
+type ActorScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ActorScreen'>;
+type ActorScreenRouteProp = RouteProp<RootStackParamList, 'ActorScreen'>;
+
 export default function ActorScreen() {
+    const route = useRoute<ActorScreenRouteProp>();
+    const navigation = useNavigation<ActorScreenNavigationProp>();
+    const actor = route.params.actor as CastMember;
+
     const [isLiked, setIsLiked] = useState(false);
-    const [movies, setMovies] = useState([{ id: 1, title: "Movie 1", poster_path: require("../assets/images/icon.png"), cast: [{ name: "name", profile_path: require("../assets/images/icon.png") }] },
-    { id: 2, title: "Movie 2", poster_path: require("../assets/images/icon.png"), cast: [{ name: "name", profile_path: require("../assets/images/icon.png") }] },
+    const [movies, setMovies] = useState([{ id: 1, title: "Actor's Movie 1", poster_path: require("../assets/images/icon.png") },
+    { id: 2, title: "Actor's Movie 2", poster_path: require("../assets/images/icon.png") },
+    { id: 3, title: "Actor's Movie 3", poster_path: require("../assets/images/icon.png") },
     ]);
-    const navigation = useNavigation();
     return (
 
         <ScrollView style={styles.container}>
@@ -37,7 +48,7 @@ export default function ActorScreen() {
                 <View style={styles.glowWrapper}>
                     <Image source={require("../assets/images/icon.png")} style={styles.image} />
                 </View>
-                <Text style={styles.actorName}>Actor Name</Text>
+                <Text style={styles.actorName}>{actor.name}</Text>
                 <Text style={styles.location}>Location </Text>
                 <View style={styles.dataRow}>
                     <View style={{ borderRightWidth: 2, borderRightColor: "white", padding: 10, justifyContent: 'center' }}>
@@ -61,7 +72,7 @@ export default function ActorScreen() {
                 
             </View>
             <View style={{paddingHorizontal:10 , paddingVertical:30}}>
-            <MoviesList title="Other Movies" data={movies} />
+            <MoviesList title="Other Movies" data={movies} hasSeeAll={false} />
             </View>
         </ScrollView>
     )

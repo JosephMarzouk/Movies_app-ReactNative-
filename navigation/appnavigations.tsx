@@ -1,9 +1,20 @@
+import HomeScreen from "@/app/index";
+import ActorScreen from "@/screens/ActorScreen";
+import MovieDetails from "@/screens/MovieDetails";
+import SearchScreen from "@/screens/SearchScreen";
+import { CastMember } from '@/types/cast';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ActorScreen from "../screens/ActorScreen.tsx";
-import HomeScreen from "../screens/HomeScreen.tsx";
-import MovieDetails from "../screens/MovieDetails.tsx";
-const Stack = createNativeStackNavigator();
+import React from 'react';
+
+export type RootStackParamList = {
+  Home: undefined;
+  MovieDetails: { movieId: number };
+  ActorScreen: { actor: CastMember };
+  SearchScreen: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigation(){
     return(
@@ -12,6 +23,7 @@ export default function AppNavigation(){
             <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}} />
             <Stack.Screen name="MovieDetails" component={MovieDetails} options={{headerShown:false}} />
             <Stack.Screen name="ActorScreen" component={ActorScreen} options={{headerShown:false}} />
+            <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerShown:false}} />
         </Stack.Navigator>
      </NavigationContainer>   
     )

@@ -1,7 +1,7 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -14,18 +14,49 @@ import {
 } from "react-native";
 import CastList from "../components/castlist";
 import { RootStackParamList } from "../navigation/appnavigations";
+import { CastMember, MovieCreditsResponse } from "../types/cast";
+import { Movie } from "../types/movie";
 
+import { fallbackImage, image500 } from "@/constants/constants";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
-
+import { fetchMovieCredits, fetchMovieDetails, fetchSimilarMovies } from "../API/MoviesDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 
 export default function MovieDetails() {
-  const [cast, setCast] = useState([{ id: 1, name: "John Doe", profile_path: require("../assets/images/icon.png") }, { id: 2, name: "Jane Smith", profile_path: require("../assets/images/icon.png") }, { id: 3, name: "Bob Johnson", profile_path: require("../assets/images/icon.png") }, { id: 4, name: "Alice Brown", profile_path: require("../assets/images/icon.png") }]);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, "MovieDetails">>();
+  const movieId = route.params?.movieId;
+
+  console.log("movieId from inside", movieId)
+
+  useEffect(() => {
+    if (movieId) {
+      getMovieDetails();
+      getMovieCredits();
+      getSimilarMovies();
+    }
+  }, [movieId]);
+
+  const getMovieDetails = async () => {
+    const data = await fetchMovieDetails(movieId);
+    setMovieDetails(data);
+  };
+
+  const getMovieCredits = async () => {
+    const data: MovieCreditsResponse = await fetchMovieCredits(movieId);
+    if (data && data.cast) {
+      setCast(data.cast);
+    }
+  };
+
+  const getSimilarMovies = async () => {
+    const data = await fetchSimilarMovies(movieId);
+  };
+  const [movieDetails, setMovieDetails] = useState<Movie | null>(null);
+  const [cast, setCast] = useState<CastMember[]>([]);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLiked, setIsLiked] = useState(false);
 
   if (!route.params?.movieId) {
@@ -36,15 +67,17 @@ export default function MovieDetails() {
     );
   }
 
-  const movieId = route.params.movieId;
-  const item = { id: movieId, title: `Movie ${movieId}`, poster_path: require("../assets/images/icon.png"), overview: "Sample movie overview..." };
+  const item = { id: route.params.movieId, title: `Movie ${route.params.movieId}`, poster_path: "/fallback", overview: "Sample movie overview..." };
+  const tmdbImage = movieDetails?.poster_path ? image500(movieDetails.poster_path) : null;
+ 
 
+  const imageSource = tmdbImage || fallbackImage;
+    
   return (
     <View style={styles.container}>
-      {/* Poster Background */}
-      <Image source={item.poster_path} style={styles.backgroundPoster} />
+      <Image source={imageSource} style={styles.backgroundPoster} />
 
-      {/* Fade Gradient */}
+
       <LinearGradient
         colors={["transparent", "rgba(0,0,0,0.7)", "black"]}
         style={styles.gradient}
@@ -52,7 +85,6 @@ export default function MovieDetails() {
         end={{ x: 0.5, y: 1 }}
       />
 
-      {/* Header */}
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -68,34 +100,33 @@ export default function MovieDetails() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-<ScrollView>
-      {/* Content */}
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>{item.title}</Text>
+      <ScrollView>
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>{movieDetails?.title || item.title}</Text>
 
-        <View style={styles.metaRow}>
-          <Text style={styles.metaText}>Release Date:</Text>
-          <Text style={styles.metaText}> 2017 </Text>
-          <Text style={styles.metaText}>· 3hr 20min</Text>
+          <View style={styles.metaRow}>
+            <Text style={styles.metaText}>{movieDetails?.release_date || 'item.release_date'}</Text>
+            <Text style={styles.metaText}>{movieDetails?.runtime || 'item.runtime'} </Text>
+           {/* <Text style={styles.metaText}>{movieDetails?.vote_average ||  'dasasd'}</Text> */}
+          </View>
+
+
+          <View style={styles.metaRow}>
+
+            <Text style={styles.metaText}>{movieDetails?.genres?.map((genre: any) => genre.name).join(" · ") || 'item.genres'}</Text>
+          </View>
+
+          <Text style={styles.overview}>
+            {movieDetails?.overview || item.overview || "No overview available"}
+          </Text>
+
+          
+
+
+          <CastList cast={cast} />
+
         </View>
-
-
-        <View style={styles.metaRow}>
-
-          <Text style={styles.metaText}>Action · Comedy · Adventure</Text>
-        </View>
-
-        <Text style={styles.overview}>
-          {item.overview || "No overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview availableNo overview available"}
-        </Text>
-
-        {/* Cast List */}
-
-
-        <CastList cast={cast} />
-
-      </View>
-</ScrollView>
+      </ScrollView>
 
     </View>
   );

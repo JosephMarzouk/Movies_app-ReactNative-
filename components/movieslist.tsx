@@ -1,3 +1,4 @@
+import { fallbackImage, image185 } from "@/constants/constants";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -37,6 +38,7 @@ export default function MoviesList({ title, data, hasSeeAll = true }: MoviesList
       </View>
 
       <ScrollView
+      style={{ height: height * 0.3 }}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -54,11 +56,20 @@ export default function MoviesList({ title, data, hasSeeAll = true }: MoviesList
 }
 
 const MovieCard = ({ item, handleClick }: { item: Movie; handleClick: (item: Movie) => void }) => {
+  const tmdbImage = image185(item.poster_path);
+
+  const imageSource = tmdbImage || fallbackImage;
+  
   return (
-    <View style={[styles.cardWrapper, { width: width * 0.33, height: height * 0.24 }]}>
+    <View style={[styles.cardWrapper, { width: width * 0.3, height: height * 0.33 }]}>
       <TouchableOpacity onPress={() => handleClick(item)}>
-        <Image source={item.poster_path} style={styles.image} />
-        <Text style={styles.title}>{item.title}</Text>
+         <Image 
+           source={imageSource} 
+           style={styles.image}
+           onError={(error) => console.log('MovieList Image load error:', error)}
+           onLoad={() => console.log('MovieList Image loaded successfully')}
+         />
+        <Text style={styles.title}>{item.title.length > 10 ? item.title.slice(0, 10) + "..." : item.title}</Text>
       </TouchableOpacity>
     </View>
   );

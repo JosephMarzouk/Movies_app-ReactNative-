@@ -1,5 +1,5 @@
-import HomeScreen from "@/app/index";
 import ActorScreen from "@/screens/ActorScreen";
+import HomeScreen from "@/screens/HomeScreen";
 import MovieDetails from "@/screens/MovieDetails";
 import SearchScreen from "@/screens/SearchScreen";
 import { CastMember } from '@/types/cast';

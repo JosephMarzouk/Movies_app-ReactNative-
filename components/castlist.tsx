@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { fallbackImage, image185 } from '../constants/constants';
 import { RootStackParamList } from '../navigation/appnavigations';
 import { CastMember } from '../types/cast';
 
@@ -32,11 +33,14 @@ export default function CastList({ cast }: CastListProps){
 }
 
 const CastIcon = (CastData: CastMember, handleClick: (item: CastMember) => void, index: number) => {
+    const imageSource = CastData.profile_path ? image185(CastData.profile_path) : fallbackImage;
+    
     return (
         <View style={styles.castItem} key={index}>
             <TouchableOpacity onPress={() => { handleClick(CastData); }}>
-                <Image source={CastData.profile_path} style={styles.castImage} />
+                <Image source={imageSource} style={styles.castImage} />
                 <Text style={styles.castName}>{CastData.name}</Text>
+                <Text style={styles.characterName}>{CastData.character}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -72,5 +76,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'center',
         width: 80
+    },
+    characterName: {
+        color: '#ccc',
+        fontSize: 10,
+        textAlign: 'center',
+        width: 80,
+        marginTop: 2
     }
 });

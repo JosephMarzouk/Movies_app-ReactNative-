@@ -1,5 +1,7 @@
 import {
-    API_KEY, BASE_URL,
+    ActorDetailsEndPoint,
+    API_KEY,
+    BASE_URL,
     MovieCreditsEndPoint,
     MovieDetailsEndPoint,
     PopularMoviesEndPoints,
@@ -54,4 +56,8 @@ export const fetchMovieCredits = (id: number) => {
 }
 export const fetchSimilarMovies = (id: number) => {
     return apiCall(SimilarMoviesEndPoint(id), '1');
+}
+
+export const  fetchActorDetails = (id: number) => {
+    return apiCall(ActorDetailsEndPoint(id), '1');
 }

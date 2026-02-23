@@ -1,7 +1,9 @@
+import { fetchActorDetails } from "@/API/MoviesDB";
 import MoviesList from "@/components/movieslist";
+import { fallbackImage, image500 } from "@/constants/constants";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
@@ -18,12 +20,26 @@ export default function ActorScreen() {
     const route = useRoute<ActorScreenRouteProp>();
     const navigation = useNavigation<ActorScreenNavigationProp>();
     const actor = route.params.actor as CastMember;
+    const [showFullBiography, setShowFullBiography] = useState(false);
 
     const [isLiked, setIsLiked] = useState(false);
+    const [actorDetails, setActorDetails] = useState<CastMember | null>(null);
     const [movies, setMovies] = useState([{ id: 1, title: "Actor's Movie 1", poster_path: require("../assets/images/icon.png") },
     { id: 2, title: "Actor's Movie 2", poster_path: require("../assets/images/icon.png") },
     { id: 3, title: "Actor's Movie 3", poster_path: require("../assets/images/icon.png") },
     ]);
+
+    const getActorDetails = async () => {
+        const data = await fetchActorDetails(actor.id);
+        if (data) {
+            setActorDetails(data);
+        }
+    };
+
+    useEffect(() => {
+        getActorDetails();
+    }, []);
+
     return (
 
         <ScrollView style={styles.container}>
@@ -46,33 +62,47 @@ export default function ActorScreen() {
             </SafeAreaView>
             <View style={styles.body}>
                 <View style={styles.glowWrapper}>
-                    <Image source={require("../assets/images/icon.png")} style={styles.image} />
+                    <Image source={actor.profile_path ? image500(actor.profile_path) : fallbackImage} style={styles.image} />
                 </View>
-                <Text style={styles.actorName}>{actor.name}</Text>
-                <Text style={styles.location}>Location </Text>
+                <Text style={styles.actorName}>{actorDetails?.original_name || actor.name}</Text>
+                <Text style={styles.location}>{actorDetails?.place_of_birth || 'Unknown location'}</Text>
                 <View style={styles.dataRow}>
                     <View style={{ borderRightWidth: 2, borderRightColor: "white", padding: 10, justifyContent: 'center' }}>
-                        <Text style={styles.rowTitle}>Gender</Text>
-                        <Text style={styles.rowDescription}> Male</Text>
+                        <Text style={styles.rowTitle}>Known For</Text>
+                        <Text style={styles.rowDescription}> {actor.known_for_department}</Text>
 
                     </View>
                     <View style={{ borderRightWidth: 2, borderRightColor: "white", padding: 10, justifyContent: 'center' }}>
                         <Text style={styles.rowTitle}>Birthdate </Text>
-                        <Text style={styles.rowDescription}> 14-2-2026  </Text>
+                        <Text style={styles.rowDescription}> {actorDetails?.birthday || 'Unknown'}</Text>
 
                     </View>
                     <View style={{ borderRightColor: "white", padding: 10, justifyContent: 'center' }}>
                         <Text style={styles.rowTitle}>Gender</Text>
-                        <Text style={styles.rowDescription}> Male</Text>
+                        <Text style={styles.rowDescription}> {actor.gender == 1 ? 'female' : 'male'}</Text>
 
                     </View>
                 </View>
                 <Text style={styles.biographyTitle}>Biography</Text>
-                <Text style={styles.biographyDescription}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</Text>
-                
+                <Text
+                    style={styles.biographyDescription}
+                    numberOfLines={showFullBiography ? undefined : 10}
+                >
+                    {actorDetails?.biography || 'No biography available.'}
+                </Text>
+                {actorDetails?.biography && actorDetails.biography.length > 0 && (
+                    <TouchableOpacity
+                        onPress={() => setShowFullBiography(!showFullBiography)}
+                    >
+                        <Text style={styles.showMoreText}>
+                            {showFullBiography ? "Show Less" : "Show More"}
+                        </Text>
+                    </TouchableOpacity>
+                )}
+
             </View>
-            <View style={{paddingHorizontal:10 , paddingVertical:30}}>
-            <MoviesList title="Other Movies" data={movies} hasSeeAll={false} />
+            <View style={{ paddingHorizontal: 10, paddingVertical: 30 }}>
+                <MoviesList title="Other Movies" data={movies} hasSeeAll={false} />
             </View>
         </ScrollView>
     )
@@ -146,6 +176,14 @@ const styles = StyleSheet.create({
         shadowRadius: 60,
         elevation: 5,
     },
+    showMoreText: {
+        color: "#eab308",
+        fontSize: 16,
+        fontWeight: "bold",
+        marginTop: 10,
+        alignSelf: "center",
+    },
+
     dataRow: {
         flexDirection: "row",
         backgroundColor: "rgba(108, 110, 108, 0.47)",
@@ -156,12 +194,16 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     rowTitle: {
+        paddingHorizontal: 10,
         color: "white",
         fontSize: 16,
         fontWeight: "bold",
         paddingVertical: 5,
     },
     rowDescription: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+
         color: "white",
         fontSize: 14,
         fontWeight: "bold",

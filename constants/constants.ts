@@ -14,6 +14,9 @@ export const SimilarMoviesEndPoint = (id: number) => `/movie/${id}/similar`;
 export const MovieReviewsEndPoint = (id: number) => `/movie/${id}/reviews`;
 export const MovieVideosEndPoint = (id: number) => `/movie/${id}/videos`;
 
+//Actor Details EndPoints
+export const ActorDetailsEndPoint = (id: number) => `/person/${id}`;
+
 //Images EndPoints
 export const image500 = (path: string) => {
   return path

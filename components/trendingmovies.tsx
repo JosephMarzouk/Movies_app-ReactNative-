@@ -19,27 +19,27 @@ console.log(item.id)
   return (
     <View>
       <Text style={styles.text}>Trending Movies</Text>
-
-      <Carousel
-        width={width}
-        height={height*0.4}
+ <Carousel
+        width={width * 0.66}
+        height={400}
         data={data}
         loop
         mode="parallax"
         style={{
-          alignSelf: "center",
-          alignItems: "center",
-          justifyContent: "center",
           width: width,
+          alignSelf: "center",
+          justifyContent: "center",
+          alignItems: "center",
           overflow: "visible",
         }}
         modeConfig={{
+          parallaxScrollingScale: 0.9,
           parallaxScrollingOffset: 40,
-          parallaxScrollingScale: 0.7,
-          parallaxAdjacentItemScale: 0.95,
-
+          parallaxAdjacentItemScale: 0.75,
         }}
-        renderItem={({ item }) => <MovieCard item={item} handleClick={handleClick} />}
+        renderItem={({ item }) => (
+          <MovieCard item={item} handleClick={handleClick} />
+        )}
       />
     </View>
   );
@@ -53,7 +53,7 @@ const MovieCard = ({ item, handleClick }: { item: any, handleClick: (item: any) 
   const imageSource = tmdbImage || fallbackImage;
   
   return (
-    <View style={[styles.cardWrapper, { width:width*0.3, height:height*0.4 }]}>
+    <View style={[styles.cardWrapper, { width:width*0.7, height:height*0.4 }]}>
       <TouchableOpacity onPress={() => handleClick(item)}>
         <Image 
           source={imageSource} 

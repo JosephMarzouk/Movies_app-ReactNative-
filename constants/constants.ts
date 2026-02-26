@@ -11,11 +11,14 @@ export const PopularMoviesEndPoints = '/movie/popular';
 export const MovieDetailsEndPoint = (id:number) => `/movie/${id}`;
 export const MovieCreditsEndPoint = (id: number) => `/movie/${id}/credits`;
 export const SimilarMoviesEndPoint = (id: number) => `/movie/${id}/similar`;
+export const MovieRecommendationsEndPoint = (id: number) => `/movie/${id}/recommendations`;
 export const MovieReviewsEndPoint = (id: number) => `/movie/${id}/reviews`;
 export const MovieVideosEndPoint = (id: number) => `/movie/${id}/videos`;
+export const SearchMoviesEndPoint = (query: string) => `/search/movie?query=${query}`;
 
 //Actor Details EndPoints
 export const ActorDetailsEndPoint = (id: number) => `/person/${id}`;
+export const RecommendedByActorEndPoint = (id: number) => `/person/${id}/movie_credits`;
 
 //Images EndPoints
 export const image500 = (path: string) => {

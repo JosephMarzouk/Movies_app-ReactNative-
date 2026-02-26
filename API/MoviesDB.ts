@@ -4,8 +4,10 @@ import {
     BASE_URL,
     MovieCreditsEndPoint,
     MovieDetailsEndPoint,
+    MovieRecommendationsEndPoint,
     PopularMoviesEndPoints,
-    SimilarMoviesEndPoint,
+    RecommendedByActorEndPoint,
+    SearchMoviesEndPoint,
     TopRatedMoviesEndPoints,
     TrendingMoviesEndPoints,
     UpCommingMoviesEndPoints
@@ -54,10 +56,19 @@ export const fetchMovieDetails = (id: number) => {
 export const fetchMovieCredits = (id: number) => {
     return apiCall(MovieCreditsEndPoint(id), '1');
 }
-export const fetchSimilarMovies = (id: number) => {
-    return apiCall(SimilarMoviesEndPoint(id), '1');
-}
 
-export const  fetchActorDetails = (id: number) => {
+export const fetchActorDetails = (id: number) => {
     return apiCall(ActorDetailsEndPoint(id), '1');
 }
+
+export const fetchRecommendedMovies = (id: number) => {
+    return apiCall(MovieRecommendationsEndPoint(id), '1');
+}
+
+export const fetchRecommendedByActor = (id: number) => {
+    return apiCall(RecommendedByActorEndPoint(id), '1');
+}
+
+export const fetchSearchMovies = (query: string) => {
+    return apiCall(SearchMoviesEndPoint(query), '1');
+} 

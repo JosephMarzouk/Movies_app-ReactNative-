@@ -29,7 +29,7 @@ export default function MoviesList({ title, data, hasSeeAll = true }: MoviesList
   return (
     <View>
       <View style={styles.headerView}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.sectionTitle}>{title}</Text>
         {hasSeeAll && (
           <TouchableOpacity>
             <Text style={styles.seeAll}>See All</Text>
@@ -83,19 +83,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-  title: {
+  sectionTitle: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 8,
+    fontFamily: 'Poppins-Bold',
+  },
+  title :{
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 8
+    marginLeft: 8,
+    
   },
   seeAll: {
     color: '#eab308',
     fontSize: 14,
+    fontFamily: 'Poppins-Regular',
   },
     image: {
     width: width * 0.3,
-    height: height * 0.2,
+    height: height * 0.25,
     borderRadius: 16,
   },
   cardWrapper: {

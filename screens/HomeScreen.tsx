@@ -1,6 +1,9 @@
 import { fetchPopularMovies, fetchTrendingMovies, fetchUpCommingMovies } from "@/API/MoviesDB";
 import MoviesList from "@/components/movieslist";
 import TrendingMovies from "@/components/trendingmovies";
+import { RootStackParamList } from "@/navigation/appnavigations";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -18,7 +21,11 @@ import {
 } from "react-native-heroicons/outline";
 const { height } = Dimensions.get("window");
 export default function HomeScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const handleClick = () => {
+    navigation.navigate("SearchScreen");
+  };
   useEffect(() => {
     getTrendingMovies();
     getUpCommingMovies();
@@ -27,7 +34,6 @@ export default function HomeScreen() {
 
   const getTrendingMovies = async () => {
     const data = await fetchTrendingMovies()
-    console.log('Trending movies data:', data)
     if (data && data.results) {
       setTrendingMovies(data.results)
     } else {
@@ -59,9 +65,9 @@ export default function HomeScreen() {
     setLoading(false)
   }
 const [loading, setLoading] = useState(true)
-  const [trendingMovies, setTrendingMovies] = useState([]);
-   const [PopularMovies, setPopularMovies] = useState([]);
-   const [UpCommingMovies, setUpCommingMovies] = useState([]);
+const [trendingMovies, setTrendingMovies] = useState([]);  
+const [PopularMovies, setPopularMovies] = useState([]);
+const [UpCommingMovies, setUpCommingMovies] = useState([]);
     
   return (
     <View style={styles.View}>
@@ -86,7 +92,7 @@ const [loading, setLoading] = useState(true)
             <Text style={styles.Text}>ovies</Text>
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleClick}>
             <MagnifyingGlassIcon color="white" size={24} />
           </TouchableOpacity>
         </View>

@@ -17,10 +17,12 @@ import { RootStackParamList } from "../navigation/appnavigations";
 import { CastMember, MovieCreditsResponse } from "../types/cast";
 import { Movie } from "../types/movie";
 
+import Loading from "@/components/loading";
+import MoviesList from "@/components/movieslist";
 import { fallbackImage, image500 } from "@/constants/constants";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
-import { fetchMovieCredits, fetchMovieDetails, fetchSimilarMovies } from "../API/MoviesDB";
+import { fetchMovieCredits, fetchMovieDetails, fetchRecommendedMovies } from "../API/MoviesDB";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
@@ -28,14 +30,11 @@ const height = Dimensions.get("window").height;
 export default function MovieDetails() {
   const route = useRoute<RouteProp<RootStackParamList, "MovieDetails">>();
   const movieId = route.params?.movieId;
-
-  console.log("movieId from inside", movieId)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (movieId) {
-      getMovieDetails();
-      getMovieCredits();
-      getSimilarMovies();
+      loadAllData();
     }
   }, [movieId]);
 
@@ -50,14 +49,30 @@ export default function MovieDetails() {
       setCast(data.cast);
     }
   };
+  const getRecommendedMovies = async () => {
+    const data = await fetchRecommendedMovies(movieId);
+    console.log('Recommended movies API response:', data);
+    console.log('Results array:', data?.results);
+    setRecommendedMovies(data?.results || []);
+  };
 
-  const getSimilarMovies = async () => {
-    const data = await fetchSimilarMovies(movieId);
+  const loadAllData = async () => {
+    setLoading(true);
+    await Promise.all([
+      getMovieDetails(),
+      getMovieCredits(),
+      getRecommendedMovies()
+    ]);
+    setLoading(false);
   };
   const [movieDetails, setMovieDetails] = useState<Movie | null>(null);
   const [cast, setCast] = useState<CastMember[]>([]);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLiked, setIsLiked] = useState(false);
+  const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
+  if (loading) {
+    return <Loading />;
+  }
 
   if (!route.params?.movieId) {
     return (
@@ -69,10 +84,10 @@ export default function MovieDetails() {
 
   const item = { id: route.params.movieId, title: `Movie ${route.params.movieId}`, poster_path: "/fallback", overview: "Sample movie overview..." };
   const tmdbImage = movieDetails?.poster_path ? image500(movieDetails.poster_path) : null;
- 
+
 
   const imageSource = tmdbImage || fallbackImage;
-    
+
   return (
     <View style={styles.container}>
       <Image source={imageSource} style={styles.backgroundPoster} />
@@ -107,7 +122,7 @@ export default function MovieDetails() {
           <View style={styles.metaRow}>
             <Text style={styles.metaText}>{movieDetails?.release_date || 'item.release_date'}</Text>
             <Text style={styles.metaText}>{movieDetails?.runtime || 'item.runtime'} </Text>
-           {/* <Text style={styles.metaText}>{movieDetails?.vote_average ||  'dasasd'}</Text> */}
+            {/* <Text style={styles.metaText}>{movieDetails?.vote_average ||  'dasasd'}</Text> */}
           </View>
 
 
@@ -120,13 +135,16 @@ export default function MovieDetails() {
             {movieDetails?.overview || item.overview || "No overview available"}
           </Text>
 
-          
 
 
           <CastList cast={cast} />
 
 
         </View>
+        {recommendedMovies && recommendedMovies.length > 0 && (
+          <MoviesList title="Recommended Movies" data={recommendedMovies} />
+        )}
+
       </ScrollView>
 
     </View>

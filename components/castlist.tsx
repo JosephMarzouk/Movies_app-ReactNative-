@@ -10,7 +10,6 @@ interface CastListProps {
 }
 
 export default function CastList({ cast }: CastListProps){
-    console.log('CastList rendered with cast:', cast);
     
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const handleClick = (item: CastMember) => {
@@ -48,16 +47,18 @@ const CastIcon = (CastData: CastMember, handleClick: (item: CastMember) => void,
 const styles = StyleSheet.create({
     container: {
         marginTop: 16,
-        backgroundColor: 'rgba(0,0,0,0.8)',
+        
         paddingBottom: 20,
         width: '100%'
     },
     title: {
+        padding: 8,
         color: 'white',
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
         marginLeft: 16,
-        marginBottom: 8
+        marginBottom: 8,
+        fontFamily :'Inter',
     },
     castItem: {
         alignItems: 'center',

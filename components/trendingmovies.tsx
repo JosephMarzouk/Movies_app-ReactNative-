@@ -13,7 +13,6 @@ const height = Dimensions.get("window").height;
 export default function TrendingMovies({ data }: { data: any[] }) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const handleClick = (item: any) => {
-console.log(item.id)
     navigation.navigate("MovieDetails", { movieId: item.id });
   };
   return (
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     marginLeft: 10,
+    paddingVertical: 18,
   },
 
   cardWrapper: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 
   image: {
     width: width * 0.6,
-    height: height * 0.4,
+    height: height * 0.5,
     borderRadius: 16,
   },
 

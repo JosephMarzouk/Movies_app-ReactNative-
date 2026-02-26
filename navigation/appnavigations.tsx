@@ -24,6 +24,7 @@ export default function AppNavigation(){
             <Stack.Screen name="MovieDetails" component={MovieDetails} options={{headerShown:false}} />
             <Stack.Screen name="ActorScreen" component={ActorScreen} options={{headerShown:false}} />
             <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerShown:false}} />
+            
         </Stack.Navigator>
      </NavigationContainer>   
     )

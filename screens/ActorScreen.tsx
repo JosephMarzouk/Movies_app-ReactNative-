@@ -1,4 +1,5 @@
-import { fetchActorDetails } from "@/API/MoviesDB";
+import { fetchActorDetails, fetchRecommendedByActor } from "@/API/MoviesDB";
+import Loading from '@/components/loading';
 import MoviesList from "@/components/movieslist";
 import { fallbackImage, image500 } from "@/constants/constants";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -17,31 +18,48 @@ type ActorScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 type ActorScreenRouteProp = RouteProp<RootStackParamList, 'ActorScreen'>;
 
 export default function ActorScreen() {
+
     const route = useRoute<ActorScreenRouteProp>();
     const navigation = useNavigation<ActorScreenNavigationProp>();
     const actor = route.params.actor as CastMember;
+    const [loading, setLoading] = useState(true);
     const [showFullBiography, setShowFullBiography] = useState(false);
 
     const [isLiked, setIsLiked] = useState(false);
     const [actorDetails, setActorDetails] = useState<CastMember | null>(null);
-    const [movies, setMovies] = useState([{ id: 1, title: "Actor's Movie 1", poster_path: require("../assets/images/icon.png") },
-    { id: 2, title: "Actor's Movie 2", poster_path: require("../assets/images/icon.png") },
-    { id: 3, title: "Actor's Movie 3", poster_path: require("../assets/images/icon.png") },
-    ]);
+    const [movies, setMovies] = useState([]);
 
     const getActorDetails = async () => {
+        setLoading(true);
         const data = await fetchActorDetails(actor.id);
         if (data) {
             setActorDetails(data);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
         getActorDetails();
+        console.log('fetchRecommendedByActor function:', typeof fetchRecommendedByActor);
+        fetchRecommendedByActor(actor.id).then((data) => {
+            if (data && data.cast) {
+                const mappedMovies = data.cast.map((castItem: any) => ({
+                    id: castItem.id,
+                    title: castItem.title || castItem.original_title || castItem.name,
+                    poster_path: castItem.poster_path
+                }));
+                setMovies(mappedMovies);
+            }
+        }).catch((error) => {
+            console.error('Error fetching actor movies:', error);
+        });
     }, []);
 
-    return (
+    if (loading) {
+        return <Loading />;
+    }
 
+    return (
         <ScrollView style={styles.container}>
 
             <SafeAreaView style={styles.safeArea}>

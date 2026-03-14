@@ -1,7 +1,7 @@
 import { fallbackImage, image185 } from "@/constants/constants";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { RootStackParamList } from "../navigation/appnavigations";
 
 interface Movie {
@@ -14,43 +14,55 @@ interface MoviesListProps {
   title: string;
   data: Movie[];
   hasSeeAll?: boolean;
+  loading?: boolean;
+  transparent?: boolean;
 }
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-export default function MoviesList({ title, data, hasSeeAll = true }: MoviesListProps) {
+export default function MoviesList({ title, data, hasSeeAll = true, loading = false, transparent = false }: MoviesListProps) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleClick = (item: Movie) => {
     navigation.navigate("MovieDetails", { movieId: item.id });
   };
 
+  const handleSeeAll = () => {
+    navigation.navigate("AllMovies", { movies: data, title: title });
+  };
+
   return (
-    <View>
+    <View style={[styles.container, transparent && styles.transparentContainer]}>
       <View style={styles.headerView}>
         <Text style={styles.sectionTitle}>{title}</Text>
         {hasSeeAll && (
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.seeAllContainer} onPress={handleSeeAll}>
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         )}
       </View>
 
-      <ScrollView
-      style={{ height: height * 0.3 }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 10 }}
-      >
-        {data?.map((item) => (
-          <MovieCard
-            key={item.id}
-            item={item}
-            handleClick={handleClick}
-          />
-        ))}
-      </ScrollView>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#eab308" />
+        </View>
+      ) : (
+        <ScrollView
+          style={{ height: height * 0.3 }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 5 }}
+        >
+          {data?.map((item) => (
+            <MovieCard
+              key={item.id}
+              item={item}
+              handleClick={handleClick}
+            />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -77,6 +89,20 @@ const MovieCard = ({ item, handleClick }: { item: Movie; handleClick: (item: Mov
 
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#1b365c5f',
+    paddingVertical: 10,
+    paddingRight:5,
+    borderRadius:15
+  },
+  transparentContainer: {
+    backgroundColor: 'transparent',
+  },
+  loadingContainer: {
+    height: height * 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -97,10 +123,16 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     
   },
+  seeAllContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    backgroundColor: 'rgba(234, 179, 8, 0.2)',
+    borderRadius: 20,
+  },
   seeAll: {
     color: '#eab308',
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontWeight: 'bold',
   },
     image: {
     width: width * 0.3,

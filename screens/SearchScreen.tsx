@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import { ChevronLeftIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
 
 const { width, height } = Dimensions.get("window");
 
@@ -108,7 +108,18 @@ export default function SearchScreen() {
         
         {!loading && !query && (
           <View style={styles.placeholderContainer}>
-            <Text style={styles.placeholderText}>Search for movies by title</Text>
+            <View style={styles.imageContainer}>
+              <Image 
+                source={require("../assets/images/empty cinema chairs aesthetic vibe.jpg")} 
+                style={styles.placeholderImage}
+                resizeMode="cover"
+              />
+              <View style={styles.imageOverlay}>
+                <MagnifyingGlassIcon size={40} color="#eab308" />
+                <Text style={styles.placeholderTitle}>Discover Your Next Movie</Text>
+               
+              </View>
+            </View>
           </View>
         )}
         
@@ -130,6 +141,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1f2937',
     paddingTop: 40,
     alignItems: 'center',
+  },
+
+ 
+  placeholderText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -159,6 +177,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     padding: 10,
+    justifyContent: 'center',
   },
   loadingContainer: {
     flex: 1,
@@ -180,13 +199,63 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   placeholderContainer: {
+    paddingTop: height * 0.1,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
-  placeholderText: {
-    fontSize: 18,
+  imageContainer: {
+    width: width * 0.9,
+    height: height * 0.5,
+    borderRadius: 20,
+    overflow: 'hidden',
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  placeholderImage: {
+    
+    alignContent: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  imageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  placeholderTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
     color: 'white',
+    textAlign: 'center',
+    marginTop: 15,
+    marginBottom: 10,
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 10,
+  },
+  placeholderSubtitle: {
+    fontSize: 16,
+    color: '#e5e5e5',
+    textAlign: 'center',
+    lineHeight: 24,
+    textShadowColor: 'rgba(0,0,0,0.6)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
   },
   listContainer: {
     padding: 10,

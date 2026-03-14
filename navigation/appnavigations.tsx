@@ -1,4 +1,5 @@
 import ActorScreen from "@/screens/ActorScreen";
+import AllMoviesScreen from "@/screens/AllMoviesScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import MovieDetails from "@/screens/MovieDetails";
 import SearchScreen from "@/screens/SearchScreen";
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   MovieDetails: { movieId: number };
   ActorScreen: { actor: CastMember };
   SearchScreen: undefined;
+  AllMovies: { movies: any[], title: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -24,6 +26,7 @@ export default function AppNavigation(){
             <Stack.Screen name="MovieDetails" component={MovieDetails} options={{headerShown:false}} />
             <Stack.Screen name="ActorScreen" component={ActorScreen} options={{headerShown:false}} />
             <Stack.Screen name="SearchScreen" component={SearchScreen} options={{headerShown:false}} />
+            <Stack.Screen name="AllMovies" component={AllMoviesScreen} options={{headerShown:false}} />
             
         </Stack.Navigator>
      </NavigationContainer>   

@@ -23,6 +23,10 @@ const { height } = Dimensions.get("window");
 export default function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const handleMenuPress = () => {
+    (navigation as any).openDrawer();
+  };
+
   const handleClick = () => {
     navigation.navigate("SearchScreen");
   };
@@ -86,10 +90,12 @@ const [UpCommingMovies, setUpCommingMovies] = useState([]);
         }}
       >
         <View style={styles.innerView}>
-          <Bars3BottomLeftIcon size={30} color="white" strokeWidth={2} />
+          <TouchableOpacity onPress={handleMenuPress}>
+            <Bars3BottomLeftIcon size={30} color="white" strokeWidth={2} />
+          </TouchableOpacity>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={[styles.Text, { color: "#eab308" }]}>M</Text>
-            <Text style={styles.Text}>ovies</Text>
+            <Text style={[styles.text, { color: "#eab308" }]}>M</Text>
+            <Text style={styles.text}>ovies</Text>
           </View>
 
           <TouchableOpacity onPress={handleClick}>
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  Text: {
+  text: {
     color: "white",
     fontSize: 28,
     fontWeight: "bold",

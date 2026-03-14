@@ -7,7 +7,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import { HeartIcon as HeartSolidIcon } from "react-native-heroicons/solid";
 import { RootStackParamList } from "../navigation/appnavigations";
 import { CastMember } from "../types/cast";
 
@@ -69,13 +68,7 @@ export default function ActorScreen() {
                         <ChevronLeftIcon size={24} color="white" />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
-                        {isLiked ? (
-                            <HeartSolidIcon size={24} color="red" />
-                        ) : (
-                            <HeartSolidIcon size={24} color="white" />
-                        )}
-                    </TouchableOpacity>
+                    
                 </View>
             </SafeAreaView>
             <View style={styles.body}>
@@ -120,7 +113,7 @@ export default function ActorScreen() {
 
             </View>
             <View style={{ paddingHorizontal: 10, paddingVertical: 30 }}>
-                <MoviesList title="Other Movies" data={movies} hasSeeAll={false} />
+                <MoviesList title="Other Movies" data={movies} hasSeeAll={false} transparent={true}/>
             </View>
         </ScrollView>
     )

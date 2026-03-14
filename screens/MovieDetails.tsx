@@ -82,7 +82,28 @@ export default function MovieDetails() {
     );
   }
 
-  const item = { id: route.params.movieId, title: `Movie ${route.params.movieId}`, poster_path: "/fallback", overview: "Sample movie overview..." };
+  const item = {
+    id: route.params.movieId,
+    title: `Movie ${route.params.movieId}`,
+    poster_path: "/fallback",
+    backdrop_path: null,
+    overview: "Sample movie overview...",
+    vote_average: 0,
+    vote_count: 0,
+    popularity: 0,
+    adult: false,
+    original_language: "en",
+    original_title: `Movie ${route.params.movieId}`,
+    release_date: "",
+    runtime: 0,
+    genres: [],
+    production_companies: [],
+    production_countries: [],
+    spoken_languages: [],
+    status: "Released",
+    budget: 0,
+    revenue: 0
+  };
   const tmdbImage = movieDetails?.poster_path ? image500(movieDetails.poster_path) : null;
 
 
@@ -118,7 +139,9 @@ export default function MovieDetails() {
       <ScrollView>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{movieDetails?.title || item.title}</Text>
-
+          <Text style={styles.movieRating}>
+            {movieDetails?.vote_average ? movieDetails.vote_average.toFixed(1) : item.vote_average.toFixed(1)}
+            ⭐</Text>
           <View style={styles.metaRow}>
             <Text style={styles.metaText}>{movieDetails?.release_date || 'item.release_date'}</Text>
             <Text style={styles.metaText}>{movieDetails?.runtime || 'item.runtime'} </Text>
@@ -142,7 +165,7 @@ export default function MovieDetails() {
 
         </View>
         {recommendedMovies && recommendedMovies.length > 0 && (
-          <MoviesList title="Recommended Movies" data={recommendedMovies} />
+          <MoviesList title="Recommended Movies" data={recommendedMovies} hasSeeAll={false} transparent={true} />
         )}
 
       </ScrollView>
@@ -165,7 +188,14 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
   },
-
+  movieRating: {
+    
+    padding: 12,
+    textAlign: "center",
+    fontSize: 22,
+    color: '#eab308',
+    fontWeight: 'bold',
+  },
   gradient: {
     position: "absolute",
     width: "100%",
